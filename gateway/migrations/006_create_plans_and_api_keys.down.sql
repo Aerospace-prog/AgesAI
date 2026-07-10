@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS search_logs;
+DROP TABLE IF EXISTS api_keys;
+DROP TABLE IF EXISTS plan_tasks;
+DROP TABLE IF EXISTS plans;

@@ -1,0 +1,23 @@
+# CODEOWNERS — AgesAI
+# Each line defines owners for specific paths.
+# Owners are automatically requested for PR reviews.
+
+# Default — project maintainers
+* @kushagrapandey
+
+# Gateway (Go)
+/gateway/ @kushagrapandey
+
+# Python Services
+/services/ @kushagrapandey
+/services/shared/ @kushagrapandey
+
+# Frontend
+/frontend/ @kushagrapandey
+
+# Infrastructure
+/infrastructure/ @kushagrapandey
+
+# Documentation
+/docs/ @kushagrapandey
+*.md @kushagrapandey

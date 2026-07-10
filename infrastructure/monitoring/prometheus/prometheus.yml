@@ -1,0 +1,62 @@
+# ============================================
+# Prometheus Configuration
+# ============================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  scrape_timeout: 10s
+
+scrape_configs:
+  # Prometheus self-monitoring
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # OpenTelemetry Collector metrics
+  - job_name: "otel-collector"
+    static_configs:
+      - targets: ["otel-collector:8889"]
+    metrics_path: /metrics
+
+  # API Gateway (Go)
+  - job_name: "gateway"
+    static_configs:
+      - targets: ["gateway:8000"]
+    metrics_path: /metrics
+
+  # Python Services
+  - job_name: "embedding-service"
+    static_configs:
+      - targets: ["embedding:8001"]
+    metrics_path: /metrics
+
+  - job_name: "rag-service"
+    static_configs:
+      - targets: ["rag:8003"]
+    metrics_path: /metrics
+
+  - job_name: "search-service"
+    static_configs:
+      - targets: ["search:8002"]
+    metrics_path: /metrics
+
+  - job_name: "agent-service"
+    static_configs:
+      - targets: ["agent:8004"]
+    metrics_path: /metrics
+
+  - job_name: "review-service"
+    static_configs:
+      - targets: ["review:8005"]
+    metrics_path: /metrics
+
+  # PostgreSQL (via postgres_exporter — optional)
+  # - job_name: "postgresql"
+  #   static_configs:
+  #     - targets: ["postgres-exporter:9187"]
+
+  # Redis (via redis_exporter — optional)
+  # - job_name: "redis"
+  #   static_configs:
+  #     - targets: ["redis-exporter:9121"]

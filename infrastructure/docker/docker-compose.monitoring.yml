@@ -1,0 +1,120 @@
+# ============================================
+# AgesAI — Docker Compose Monitoring Stack
+# ============================================
+# Observability: Prometheus, Grafana, Loki, Jaeger, OTel Collector
+# Usage: docker compose -f infrastructure/docker/docker-compose.monitoring.yml up -d
+# ============================================
+
+name: ages-ai-monitoring
+
+services:
+  # ── OpenTelemetry Collector ──
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.112.0
+    container_name: ages-ai-otel-collector
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yml"]
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "8888:8888"   # Collector metrics
+      - "8889:8889"   # Prometheus exporter
+    volumes:
+      - ../monitoring/otel-collector/otel-collector-config.yml:/etc/otel-collector-config.yml:ro
+    depends_on:
+      - jaeger
+      - loki
+    networks:
+      - ages-ai-network
+
+  # ── Prometheus ──
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: ages-ai-prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
+      - '--web.enable-remote-write-receiver'
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheusdata:/prometheus
+    networks:
+      - ages-ai-network
+
+  # ── Grafana ──
+  grafana:
+    image: grafana/grafana:11.3.0
+    container_name: ages-ai-grafana
+    restart: unless-stopped
+    ports:
+      - "${GRAFANA_PORT:-3001}:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_EXPLORE_ENABLED: "true"
+      GF_ALERTING_ENABLED: "true"
+      GF_INSTALL_PLUGINS: grafana-clock-panel
+    volumes:
+      - ../monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ../monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafanadata:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - loki
+    networks:
+      - ages-ai-network
+
+  # ── Loki (Log Aggregation) ──
+  loki:
+    image: grafana/loki:3.2.1
+    container_name: ages-ai-loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/loki-config.yml
+    volumes:
+      - ../monitoring/loki/loki-config.yml:/etc/loki/loki-config.yml:ro
+      - lokidata:/loki
+    networks:
+      - ages-ai-network
+
+  # ── Jaeger (Distributed Tracing) ──
+  jaeger:
+    image: jaegertracing/all-in-one:1.62
+    container_name: ages-ai-jaeger
+    restart: unless-stopped
+    ports:
+      - "16686:16686"   # Jaeger UI
+      - "14268:14268"   # HTTP collector
+      - "14250:14250"   # gRPC collector
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+      SPAN_STORAGE_TYPE: "badger"
+      BADGER_EPHEMERAL: "false"
+      BADGER_DIRECTORY_VALUE: /badger/data
+      BADGER_DIRECTORY_KEY: /badger/key
+    volumes:
+      - jaegerdata:/badger
+    networks:
+      - ages-ai-network
+
+volumes:
+  prometheusdata:
+    driver: local
+  grafanadata:
+    driver: local
+  lokidata:
+    driver: local
+  jaegerdata:
+    driver: local
+
+networks:
+  ages-ai-network:
+    external: true
+    name: ages-ai-network

@@ -1,0 +1,117 @@
+# ============================================
+# AgesAI — .gitignore
+# Covers: Go, Python, Node.js, Docker, IDEs
+# ============================================
+
+# ── Environment & Secrets ──
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+
+# ── Go ──
+gateway/tmp/
+gateway/bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.out
+coverage.html
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+*.manifest
+*.spec
+pip-log.txt
+pip-delete-this-directory.txt
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+.venv/
+venv/
+ENV/
+
+# ── Node.js / Frontend ──
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+.output
+storybook-static/
+
+# ── Docker ──
+docker-compose.override.yml
+
+# ── IDE ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ── Infrastructure ──
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/*.tfplan
+terraform/.terraform.lock.hcl
+
+# ── Data Volumes (local dev) ──
+.data/
+tmp/
+
+# ── Logs ──
+*.log
+logs/
+
+# ── OS ──
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
