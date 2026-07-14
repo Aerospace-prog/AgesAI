@@ -16,7 +16,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-agesai}
       POSTGRES_USER: ${POSTGRES_USER:-agesai}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agesai_dev_password}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev_db_pass_placeholder}
     ports:
       - "5432:5432"
     volumes:
@@ -119,7 +119,7 @@ services:
       - "9001:9001"   # Console
     environment:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER:-agesai}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-agesai_minio_dev}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-dev_minio_pass_placeholder}
     volumes:
       - miniodata:/data
     healthcheck:
@@ -139,7 +139,7 @@ services:
         condition: service_healthy
     entrypoint: >
       /bin/sh -c "
-      mc alias set local http://minio:9000 agesai agesai_minio_dev;
+      mc alias set local http://minio:9000 \"$${MINIO_ROOT_USER:-agesai}\" \"$${MINIO_ROOT_PASSWORD:-dev_minio_pass_placeholder}\";
       mc mb local/ages-ai-storage --ignore-existing;
       mc mb local/ages-ai-repos --ignore-existing;
       echo 'Buckets created successfully';
