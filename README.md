@@ -164,6 +164,6 @@ This project is licensed under the [Apache License 2.0](LICENSE).
 
 <div align="center">
 
-**Built with ❤️ by [Kushagra Pandey](https://github.com/kushagrapandey)**
+**Built with ❤️ by [Kushagra Pandey](https://github.com/Aerospace-prog)**
 
 </div>
