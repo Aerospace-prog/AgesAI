@@ -3,7 +3,7 @@ module github.com/Aerospace-prog/AgesAI/gateway
 go 1.26.1
 
 require (
-	github.com/go-chi/chi/v5 v5.3.1
+	github.com/go-chi/chi/v5 v5.3.2
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/google/uuid v1.6.0
 	go.opentelemetry.io/otel v1.44.0
